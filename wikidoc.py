@@ -152,7 +152,6 @@ def readGlobalWikidocComments(file):
 
     try:
         with open(file, "r") as myfile:
-            print (file + " has been opened")
             filecontent = myfile.read()
             wikidocConfig["HEAD"] = extractStartStop("<!-- WIKIDOC HTMLHEAD", "WIKIDOC HTMLHEAD -->", filecontent)
             wikidocConfig["FOOT"] = extractStartStop("<!-- WIKIDOC HTMLFOOT", "WIKIDOC HTMLFOOT -->", filecontent)
@@ -241,15 +240,11 @@ html.append(homeHtmlContent)
 
 files = getWikiFiles(pathWiki)
 
-print ("File list built: {0} files".format(len(files)))
-
 # Append all other files to the document except Home.md
 for file in files:
     if file.endswith(".md") and not file == "Home.md" and not file == "_Sidebar.md":
-        print(file)
         html.append(parseFile(file, pathWiki))
 
-print("HTML has been built")
 # Append global foot
 html.append(wikidocConfig["FOOT"])
 
@@ -258,23 +253,17 @@ keepfiles = dict()
 
 # Write html into temp file
 keepfiles["main"] = "wikidoc.html"
-with open(pathWiki + "tempfile.html", "w") as temp_file:
-    with open(keepfiles["main"], "w") as html_file:
-        html_file.write("\n".join(html))
-        temp_file.write("\n".join(html))
-    temp_file.close()
+with open(keepfiles["main"], "w") as html_file:
+    html_file.write("\n".join(html))
 
-print("Temp file ready")
 # Write cover into temp file - if present
 if (wikidocConfig["COVER"]):
-    print("Generating cover")
     tempfiles["cover"] = "wikidoc_cover.html"
     with open(tempfiles["cover"], "w") as cover_file:
         cover_file.write(wikidocConfig["HEAD"] + "\n" + wikidocConfig["COVER"] + "\n" + wikidocConfig["FOOT"])
 
 # Write tocxsl into temp file - if present
 if (wikidocConfig["TOCXSL"]):
-    print("Generate Table of Content")
     tempfiles["toc"] = "wikidoc_toc.xsl"
     with open(tempfiles["toc"], "w") as toc_file:
         toc_file.write(wikidocConfig["TOCXSL"])
@@ -286,15 +275,14 @@ if ("cover" in tempfiles):
 if ("toc" in tempfiles):
     cmd = cmd + "toc --xsl-style-sheet " + tempfiles["toc"] + " "
 cmd = cmd + keepfiles["main"] + " " + "\"" + pathWiki + wikidocConfig["filename"] + "\""
+print(cmd)
 # Convert HTML to PDF
 try:
-    print("Cmd :" + cmd)
     subprocess.call(cmd, shell=True)
 except OSError:
     print ("Something went wrong calling " + pathWkhtmltopdf + " on " + wikidocConfig["filename"] + ".html")
 
 # Delete all created temp files
 for tempfile in tempfiles.values():
-    print("Deleting temp file {0}\n".format(tempfile))
     if (os.path.isfile(tempfile)):
         os.unlink(tempfile)
