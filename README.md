@@ -1,6 +1,6 @@
 # wikidoc
 
-This python script allows to create nice looking PDF files from a github wiki, which can be used as offline/printable documentation. It is a wrapper for pandoc and wkhtmltopdf.
+This python script allows to create nice looking PDF files from a VSTS wiki, which can be used as offline/printable documentation. It is a wrapper for pandoc and wkhtmltopdf.
 
 ## Concept ##
 
