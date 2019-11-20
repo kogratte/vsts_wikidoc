@@ -67,7 +67,7 @@ def parseFile(file, pathWiki):
         return ""
     
     # Convert to string
-    html = str(html, 'utf8').replace(".attachments", pathWiki + ".attachments")
+    html = str(html, 'utf8').replace(".attachments", "file:///" + pathWiki + ".attachments")
 
     # define search strings
     startstring = "<!-- WIKIDOC PDFONLY"
@@ -284,5 +284,9 @@ except OSError:
 
 # Delete all created temp files
 for tempfile in tempfiles.values():
+    if (os.path.isfile(tempfile)):
+        os.unlink(tempfile)
+
+for tempfile in keepfiles.values():
     if (os.path.isfile(tempfile)):
         os.unlink(tempfile)
