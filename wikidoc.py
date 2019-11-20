@@ -287,6 +287,7 @@ for tempfile in tempfiles.values():
     if (os.path.isfile(tempfile)):
         os.unlink(tempfile)
 
+# Comment the following lines if you want to be able to work on the generated html and customize pdf display
 for tempfile in keepfiles.values():
     if (os.path.isfile(tempfile)):
         os.unlink(tempfile)
