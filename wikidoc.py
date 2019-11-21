@@ -157,7 +157,7 @@ def readGlobalWikidocComments(file):
             wikidocConfig["FOOT"] = extractStartStop("<!-- WIKIDOC HTMLFOOT", "WIKIDOC HTMLFOOT -->", filecontent)
             
             if (not wikidocConfig["HEAD"] or not wikidocConfig["FOOT"]):
-                print ("Could not find HTMLHEAD and/or HTMLFOOT comment in home.md. Aborting.\n")
+                print ("Could not find HTMLHEAD and/or HTMLFOOT comment in {0}. Aborting.\n".format(file))
                 exit()
 
             wikidocConfig["COVER"] = extractStartStop("<!-- WIKIDOC COVER", "WIKIDOC COVER -->", filecontent)
@@ -228,14 +228,19 @@ if (generateImages and not os.path.isdir(pathWiki + ".attachments")):
 11
 # Home.md must be present and it must contain special comments with additional
 # informations
-(wikidocConfig, wkhtmltopdfConfig) = readGlobalWikidocComments(pathWiki + "Home.md")
+if (os.path.exists(pathWiki + "Home.md")):
+    homeFile = pathWiki + "Home.md"
+else:
+    homeFile = "DefaultHome.md"
+
+(wikidocConfig, wkhtmltopdfConfig) = readGlobalWikidocComments(homeFile)
 
 # Build html, start with global head
 html = list()
 html.append(wikidocConfig["HEAD"])
 
-# Append Home.md
-homeHtmlContent = parseFile(pathWiki + "Home.md", pathWiki)
+# Append Home.md or default home
+homeHtmlContent = parseFile(homeFile, pathWiki)
 html.append(homeHtmlContent)
 
 files = getWikiFiles(pathWiki)
@@ -275,7 +280,6 @@ if ("cover" in tempfiles):
 if ("toc" in tempfiles):
     cmd = cmd + "toc --xsl-style-sheet " + tempfiles["toc"] + " "
 cmd = cmd + keepfiles["main"] + " " + "\"" + pathWiki + wikidocConfig["filename"] + "\""
-print(cmd)
 # Convert HTML to PDF
 try:
     subprocess.call(cmd, shell=True)
