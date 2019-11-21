@@ -6,8 +6,8 @@ This python script allows to create nice looking PDF files from a VSTS wiki, whi
 
 First, you need to install used binaries.
 
-- wkhtmltopdf can be found [https://wkhtmltopdf.org/](here)
-- pandonc can be found [https://pandoc.org/](here)
+- wkhtmltopdf can be found [here](https://wkhtmltopdf.org/)
+- pandonc can be found [here](https://pandoc.org/)
 
 ## Concept ##
 
